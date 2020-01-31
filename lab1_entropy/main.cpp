@@ -2,31 +2,36 @@
 #include "text_analyzer.h"
 #include <unistd.h>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-    switch(static_cast<char>(getopt(argc, argv, "u:f:r:")))
+    std::cout.setf(std::ios::fixed);
+    switch(static_cast<char>(getopt(argc, argv, "f:r:")))
     {
         case 'f':
         {
-            text_analyzer analyzer(read_file(optarg));
-            analyzer.print_probability(std::cout);
-            break;
-        }
-        case 'u':
-        {
-            text_analyzer analyzer(download_file(optarg));
-            analyzer.print_probability(std::cout);
+            auto a = read_file(optarg);
+            for(auto& x : *a)
+            {
+                std::cout << x << std::endl;
+            }
+            text_analyzer analyzer(a);
+            analyzer.print_all(std::cout, 4);
             break;
         }
         case 'r':
         {
-            text_analyzer analyzer(new std::string(optarg));
-            analyzer.print_probability(std::cout);
+            std::string a(optarg);
+            for(auto const &x : a)
+            {
+                std::cout << x << std::endl;
+            }
+            text_analyzer analyzer(&a);
+            analyzer.print_all(std::cout, 4);
             break;
         }
         default:
         {
-            std::cout << "usage: an [-f|-u] [path|url]" << std::endl;
+            std::cout << "usage: an [-f|-r] [path|raw text]" << std::endl;
             std::exit(EXIT_FAILURE);
         }
     }

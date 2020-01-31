@@ -4,9 +4,10 @@
 #pragma once
 
 #include <string>
+#include <fstream>
 
-std::string* read_file(std::string path);
-std::string* download_file(std::string url);
+
+std::string* read_file(const char *text);
 
 enum class compressin_algorithm
 {
