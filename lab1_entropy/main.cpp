@@ -11,6 +11,5 @@ int main(int argc, char **argv)
         std::cout << "usage: an -f|-r] [path|raw text]" << std::endl;
         std::exit(EXIT_FAILURE);
     }
-    text_analyzer analyzer(read_file(argv[1]));
-    analyzer.print_all(std::wcout, 4);
+    text_analyzer(read_file(argv[1])).print_all(std::wcout, 4);
 }
