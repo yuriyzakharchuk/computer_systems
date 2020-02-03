@@ -1,11 +1,10 @@
 #include "text_analyzer.h"
 
 
-
-text_analyzer::text_analyzer(std::string* text)
+text_analyzer::text_analyzer(std::wstring* text)
     : _text(text),
       _frequency (nullptr),
-      _length(static_cast<long double>(text->length())),
+      _length(text->length()),
       _entropy(0)
 {
     this->compute_frequency();
@@ -25,7 +24,7 @@ text_analyzer::~text_analyzer()
 
 void text_analyzer::compute_frequency()
 {
-    this->_frequency = new std::map<char, long double>();
+    this->_frequency = new std::map<wchar_t, long double>();
     for(auto& x : *this->_text)
     {
         auto iter = this->_frequency->find(x);
@@ -40,7 +39,7 @@ void text_analyzer::compute_frequency()
     }
     for(auto& pair : *_frequency)
     {
-        pair.second /= _length;
+        pair.second /= static_cast<long double>(_length);
     }
 }
 
@@ -61,27 +60,27 @@ void text_analyzer::compute_information_count()
 
 
 
-void text_analyzer::print_frequency(std::ostream& os, uint32_t columns)
+void text_analyzer::print_frequency(std::basic_ostream<wchar_t> &os, uint32_t columns)
 {
     os << "Probability: \n";
     int flag = 0;
-    for (auto pair = _frequency->begin(); pair != _frequency->end(); ++pair)
+    for (const auto &pair : *_frequency)
     {
-        os << pair->first << ": " << pair->second << (((++flag % columns) != 0)? '\t' : '\n');
+        os << pair.first << ": " << pair.second << (((++flag % columns) != 0)? '\t' : '\n');
     }
     os << std::endl;  
 }
 
 
 
-void text_analyzer::print_entropy(std::ostream& os)
+void text_analyzer::print_entropy(std::basic_ostream<wchar_t> &os)
 {
     os << "Entropy: " << _entropy << '\n';
 }
 
 
 
-void text_analyzer::print_information(std::ostream& os)
+void text_analyzer::print_information(std::basic_ostream<wchar_t> &os)
 {
     os << "Information (bits): " << _information << '\n'
        << "Real bit counter: " << _length * CHAR_BIT << '\n';
@@ -89,7 +88,7 @@ void text_analyzer::print_information(std::ostream& os)
 
 
 
-void text_analyzer::print_all(std::ostream& os, uint32_t columns)
+void text_analyzer::print_all(std::basic_ostream<wchar_t> &os, uint32_t columns)
 {
     this->print_entropy(os);
     this->print_information(os);

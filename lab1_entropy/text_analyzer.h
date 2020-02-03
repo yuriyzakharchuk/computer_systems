@@ -7,27 +7,23 @@
 #include <string>
 #include <map>
 #include <iostream>
-#include <fstream>
-#include <unistd.h>
-#include <cstdlib>
 #include <cmath>
 #include <climits>
 
 class text_analyzer
 {
 public:
-    explicit text_analyzer(std::string*);
+    explicit text_analyzer(std::wstring*);
     ~text_analyzer();
-    void print_all(std::ostream& os, uint32_t columns);
-    void print_frequency(std::ostream& os, uint32_t columns);
-    void print_entropy(std::ostream& os);
-    void print_information(std::ostream& os);
-    void compress(compressin_algorithm algorithm);
+    void print_all(std::basic_ostream<wchar_t>& os, uint32_t columns);
+    void print_frequency(std::basic_ostream<wchar_t>& os, uint32_t columns);
+    void print_entropy(std::basic_ostream<wchar_t>&  os);
+    void print_information(std::basic_ostream<wchar_t>& os);
 
 private:
-    std::string *_text {nullptr};
-    std::map<char, long double> *_frequency;
-    long double _length;
+    std::wstring *_text;
+    std::map<wchar_t, long double> *_frequency;
+    size_t _length;
     long double _entropy;
     long double _information;
 

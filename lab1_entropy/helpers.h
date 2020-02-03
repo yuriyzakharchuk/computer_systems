@@ -6,16 +6,6 @@
 #include <string>
 #include <fstream>
 
-
-std::string* read_file(const char *text);
-
-enum class compressin_algorithm
-{
-    zip,
-    rar,
-    gzip,
-    bzip2,
-    xz
-};
+std::wstring *read_file(const char *text);
 
 #endif //#ifndef AH_HEADER

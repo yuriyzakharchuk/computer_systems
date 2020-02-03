@@ -1,9 +1,7 @@
 #include "helpers.h"
 
-std::string* read_file(const char *filepath)
+std::wstring *read_file(const char *filepath)
 {
-    std::ifstream t(filepath);
-    return new std::string ((std::istreambuf_iterator<char>(t)),
-                    std::istreambuf_iterator<char>());
+    std::wifstream t(filepath);
+    return new std::wstring (std::istreambuf_iterator<wchar_t>(t), std::istreambuf_iterator<wchar_t>());
 }
-
