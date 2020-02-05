@@ -8,4 +8,4 @@
 
 std::wstring *read_file(const char *text);
 
-#endif //#ifndef AH_HEADER
+#endif // AH_HEADER

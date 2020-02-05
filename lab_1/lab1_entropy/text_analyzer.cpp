@@ -25,16 +25,16 @@ text_analyzer::~text_analyzer()
 void text_analyzer::compute_frequency()
 {
     this->_frequency = new std::map<wchar_t, long double>();
-    for(auto& x : *this->_text)
+    for(const auto& x : *this->_text)
     {
-        auto iter = this->_frequency->find(x);
-        if(iter == this->_frequency->end())
+        auto iterator = this->_frequency->find(x);
+        if(iterator == this->_frequency->end())
         {
             this->_frequency->insert({x, 1});
         }
         else
         {
-            ++iter->second;
+            ++iterator->second;
         }
     }
     for(auto& pair : *_frequency)
@@ -47,7 +47,7 @@ void text_analyzer::compute_frequency()
 
 void text_analyzer::compute_entropy()
 {
-    for(auto& pair : *_frequency)
+    for(const auto& pair : *_frequency)
     {
         _entropy += pair.second * std::log2(1 / pair.second);
     }
@@ -60,7 +60,7 @@ void text_analyzer::compute_information_count()
 
 
 
-void text_analyzer::print_frequency(std::basic_ostream<wchar_t> &os, uint32_t columns)
+void text_analyzer::print_frequency(std::basic_ostream<wchar_t> &os, uint32_t columns) const
 {
     os << "Probability: \n";
     int flag = 0;
@@ -73,14 +73,14 @@ void text_analyzer::print_frequency(std::basic_ostream<wchar_t> &os, uint32_t co
 
 
 
-void text_analyzer::print_entropy(std::basic_ostream<wchar_t> &os)
+void text_analyzer::print_entropy(std::basic_ostream<wchar_t> &os) const
 {
     os << "Entropy: " << _entropy << '\n';
 }
 
 
 
-void text_analyzer::print_information(std::basic_ostream<wchar_t> &os)
+void text_analyzer::print_information(std::basic_ostream<wchar_t> &os) const
 {
     os << "Information (bits): " << _information << '\n'
        << "Real bit counter: " << _length * CHAR_BIT << '\n';
@@ -88,7 +88,7 @@ void text_analyzer::print_information(std::basic_ostream<wchar_t> &os)
 
 
 
-void text_analyzer::print_all(std::basic_ostream<wchar_t> &os, uint32_t columns)
+void text_analyzer::print_all(std::basic_ostream<wchar_t> &os, uint32_t columns) const
 {
     this->print_entropy(os);
     this->print_information(os);
