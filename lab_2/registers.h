@@ -18,9 +18,17 @@ private:
     //flag register and istruction pointer
     register_64bit *rflags = (register_64bit*)(register_memory + register64_size * (common_register_count - 2)),
                    *rip    = (register_64bit*)(register_memory + register64_size * (common_register_count - 1));
+                   
    
-    register_32bit *inititalize_32_bir_register(size_t register_number);
-    register_64bit *inititalize_64_bir_register(size_t register_number); 
+    register_64bit* inititalize_64_bir_register(size_t register_number) const
+    {
+        return (register_64bit*)(register_memory + register64_size * register_number);
+    }
+
+    register_32bit* inititalize_32_bir_register(size_t register_number) const
+    {
+        return (register_32bit*)(register_memory + register64_size * register_number);
+    }
 
 
 public:

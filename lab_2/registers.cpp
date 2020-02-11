@@ -48,15 +48,3 @@ amd64_registers::~amd64_registers()
 {
     delete[] register_memory;
 }
-
-
-
-register_64bit* amd64_registers::inititalize_64_bir_register(size_t register_number)
-{
-    return (register_64bit*)(register_memory + register64_size * register_number);
-}
-
-register_32bit* amd64_registers::inititalize_32_bir_register(size_t register_number)
-{
-    return (register_32bit*)(register_memory + register64_size * register_number);
-}

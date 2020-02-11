@@ -4,8 +4,10 @@ int main()
 {
     processor cpu = processor();
 
-    *cpu.registers.eax = 0b11;
+    /**cpu.registers.eax = 0b11;
     *cpu.registers.edx = 1;
     *cpu.registers.ebx = 0b101;
-    cpu.div(cpu.registers.ebx);
+    cpu.div(cpu.registers.ebx);*/
+    cpu.imul(-4, 5);
+    //cpu.imul(8, 2);
 }
