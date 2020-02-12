@@ -82,7 +82,8 @@ void text_analyzer::print_entropy(std::basic_ostream<wchar_t> &os) const
 
 void text_analyzer::print_information(std::basic_ostream<wchar_t> &os) const
 {
-    os << "Information (bits): " << _information << '\n';
+    os << "Information (bits): " << _information << '\n'
+       << "Real bit counter: " << _length * CHAR_BIT << '\n';
 }
 
 

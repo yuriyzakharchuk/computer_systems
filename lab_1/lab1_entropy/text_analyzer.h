@@ -9,6 +9,7 @@
 #include <iostream>
 #include <cmath>
 #include <climits>
+#include <filesystem>
 
 class text_analyzer
 {
