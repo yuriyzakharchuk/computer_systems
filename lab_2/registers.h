@@ -13,12 +13,7 @@ typedef uint32_t register_32bit;
 class amd64_registers
 {
 private:
-    unsigned char *register_memory;
-    
-    //flag register and istruction pointer
-    register_64bit *rflags = (register_64bit*)(register_memory + register64_size * (common_register_count - 2)),
-                   *rip    = (register_64bit*)(register_memory + register64_size * (common_register_count - 1));
-                   
+    unsigned char *register_memory;                   
    
     register_64bit* inititalize_64_bir_register(size_t register_number) const
     {
@@ -32,7 +27,7 @@ private:
 
 
 public:
-    static const size_t common_register_count = 18,
+    static const size_t common_register_count = 16,
                         register64_size = sizeof(register_64bit),
                         register32_size = sizeof(register_32bit);
 
@@ -40,19 +35,16 @@ public:
     ~amd64_registers();
 
 
-    //64-bit registers
+    // 64-bit registers
     register_64bit *rax, *rbx, *rcx, *rdx,
-                   *rsi, *rdi, *rbp, *rsp,
+                   *rsi, *rdi, *rbp, *rsp;
 
-                   *r8,  *r9,  *r10, *r11,
-                   *r12, *r13, *r14, *r15;
+    // 64-bit floating point registers
+    register_64bit *mmx1,  *mmx2,  *mmx3, *mmx4;
 
-    //32-bit registers
+    // 32-bit registers
     register_32bit *eax, *ebx, *ecx, *edx,
-                   *esi, *edi, *ebp, *esp,
-
-                   *r8d,  *r9d,  *r10d, *r11d,
-                   *r12d, *r13d, *r14d, *r15d;
+                   *esi, *edi, *ebp, *esp;
 };
 
 #endif //REGISTERS_HEADER

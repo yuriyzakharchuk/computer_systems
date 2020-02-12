@@ -1,15 +1,15 @@
 #include "processor.h"
 
-// Divides unsigned the value in the EDX:EAX registers (dividend) by the source operand
+// Divides unsigned the value in the EAX register (dividend) by the source operand
 // (divisor) and stores the result in the EDX:EAX registers. 
 
 void processor::div(const register_32bit *const divisor)
 {
     assert(divisor != this->registers.eax);
-    assert(divisor != this->registers.edx);
+    std::cout << "\n\t\tDIV " << *this->registers.eax << " " << *divisor << std::endl;
+    
 
     register_32bit* rax_sign_bits = ((register_32bit*)this->registers.rax) + 1;
-    *rax_sign_bits = *this->registers.edx;
     
     for(size_t i = 0; i < sizeof(register_32bit) * CHAR_BIT; ++i)
     {
@@ -29,26 +29,34 @@ void processor::div(const register_32bit *const divisor)
         std::cout << "----------------------------------------------------------------------------------------------------------------------" << std::endl;
     }
     *this->registers.edx = *rax_sign_bits;
-    std::cout << "EAX: " << *this->registers.eax << "     " << std::bitset<32>(*this->registers.eax) << std::endl;
-    std::cout << "EDX: " << *this->registers.edx << "     " << std::bitset<32>(*this->registers.edx) << std::endl;
+    std::cout << "EAX (result): " << *this->registers.eax << "     " 
+              << std::bitset<32>(*this->registers.eax) << std::endl;
+    std::cout << "EDX (remainder):" << *this->registers.edx << "     "
+              << std::bitset<32>(*this->registers.edx) << std::endl;
 }
 
 
-void processor::arithmetic_shift(std::bitset<66> &bitmap)
+
+void processor::arithmetic_shift(std::bitset<sizeof(register_64bit) * CHAR_BIT + 2> &bitmap) const
 {
-    auto tmp = bitmap[65];
+    auto tmp = (uint8_t)bitmap[65];
     bitmap >>= 1;
     bitmap[65] = tmp;
 }
 
-bool processor::full_adder(bool b1, bool b2, bool& carry)
+
+
+bool processor::full_adder(bool b1, bool b2, bool& carry) const
 {
     bool sum = (b1 ^ b2) ^ carry;
     carry = (b1 && b2) || (b1 && carry) || (b2 && carry);
     return sum;
 }
 
-void processor::add(std::bitset<66> &x, const std::bitset<66> &y)
+
+
+void processor::add(std::bitset<sizeof(register_64bit) * CHAR_BIT + 2> &x,
+    const std::bitset<sizeof(register_64bit) * CHAR_BIT + 2> &y) const
 {
     bool carry = false;
     for (size_t i = 0; i < x.size(); i++)    
@@ -57,8 +65,12 @@ void processor::add(std::bitset<66> &x, const std::bitset<66> &y)
     }
 }
 
+
+
 void processor::imul(int32_t multiplier, int32_t multiplicand)
 {
+    std::cout << "\n\t\tIMUL " << multiplier << " " << multiplicand << std::endl;
+
     std::bitset<sizeof(register_64bit) * CHAR_BIT + 2> A = multiplier;
     std::bitset<sizeof(register_64bit) * CHAR_BIT + 2> S = -multiplier;
     std::bitset<sizeof(register_64bit) * CHAR_BIT + 2> P = multiplicand;
@@ -68,26 +80,44 @@ void processor::imul(int32_t multiplier, int32_t multiplicand)
 
     for(size_t i = 0; i < sizeof(register_32bit) * CHAR_BIT; ++i)
     {
-        std::cout << "---------------------------------------------------------------------" << std::endl;
+        std::cout << "----------------------------------------------------"
+                     "-------------------------"
+                     << std::endl;
+        std::cout << "A:\t   " << A << std::endl;
+        std::cout << "S:\t   " << S << std::endl;
+        std::cout << "P:\t   " << P << std::endl;
+
         switch((uint8_t)P[0] | (uint8_t)P[1] << 1)
         {
             case 0b01:
             {
+                std::cout << "\nP + A:\t   " << P << std::endl
+                          << "\t+  " << A << std::endl;
                 add(P, A);
+                std::cout << "\t   " << P << std::endl << std::endl;
                 break;
             }
             case 0b10:
             {
+                std::cout << "\nP + S:\t   " << P << std::endl
+                          << "\t+  " << S << std::endl;
                 add(P, S);
+                std::cout << "\t   " << P << std::endl << std::endl;
                 break;
             }
         }
-        std::cout << "A: " << A << std::endl;
-        std::cout << "S: " << S << std::endl;
-        std::cout << "P: " << P << std::endl;
         arithmetic_shift(P);
+        std::cout << "Shifted P: " << P << std::endl;
     }
-    P[65] = 0;
     P >>= 1;
-    std::cout << "R: " << P << std::endl;
+    
+    *this->registers.rax = 0;
+    for(size_t i = 0; i < sizeof(register_64bit) * CHAR_BIT; ++i)
+    {
+        register_64bit bit = (bool)P[i];
+        *this->registers.rax |= (bit << i);
+    }
+
+    std::cout << "\nResult: " << static_cast<int64_t>(*this->registers.rax) << std::endl
+              << std::bitset<sizeof(register_64bit) * CHAR_BIT>(*this->registers.rax) << std::endl;
 }
