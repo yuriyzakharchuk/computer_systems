@@ -14,12 +14,6 @@ amd64_registers::amd64_registers() :
     rbp (inititalize_64_bir_register(6)),
     rsp (inititalize_64_bir_register(7)),
 
-    // 64-bit floating point registers
-    mmx1 (inititalize_64_bir_register(8)),
-    mmx2 (inititalize_64_bir_register(9)),
-    mmx3 (inititalize_64_bir_register(10)),
-    mmx4 (inititalize_64_bir_register(11)),
-
     //32-bit registers
     eax (inititalize_32_bir_register(0)),
     ebx (inititalize_32_bir_register(1)),
@@ -29,7 +23,13 @@ amd64_registers::amd64_registers() :
     esi (inititalize_32_bir_register(4)),
     edi (inititalize_32_bir_register(5)),
     ebp (inititalize_32_bir_register(6)),
-    esp (inititalize_32_bir_register(7))   
+    esp (inititalize_32_bir_register(7)),
+
+    // 32-bit floating point registers
+    mmx1 (inititalize_32_bir_register(8)),
+    mmx2 (inititalize_32_bir_register(9)),
+    mmx3 (inititalize_32_bir_register(10)),
+    mmx4 (inititalize_32_bir_register(11))
 {}
 
 amd64_registers::~amd64_registers()

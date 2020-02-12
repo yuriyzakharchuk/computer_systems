@@ -39,12 +39,13 @@ public:
     register_64bit *rax, *rbx, *rcx, *rdx,
                    *rsi, *rdi, *rbp, *rsp;
 
-    // 64-bit floating point registers
-    register_64bit *mmx1,  *mmx2,  *mmx3, *mmx4;
 
     // 32-bit registers
     register_32bit *eax, *ebx, *ecx, *edx,
                    *esi, *edi, *ebp, *esp;
+                   
+    // 32-bit floating point registers
+    register_32bit *mmx1,  *mmx2,  *mmx3, *mmx4;
 };
 
 #endif //REGISTERS_HEADER

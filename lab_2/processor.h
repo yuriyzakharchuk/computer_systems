@@ -14,7 +14,7 @@ public:
 
     void div(const register_32bit*);
     void imul(int32_t, int32_t);
-    void mul_fp(const register_64bit*);
+    void mul_fp(register_32bit *);
 
 private:
     bool full_adder(bool b1, bool b2, bool& carry) const;

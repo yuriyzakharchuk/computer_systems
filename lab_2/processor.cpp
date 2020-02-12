@@ -121,3 +121,50 @@ void processor::imul(int32_t multiplier, int32_t multiplicand)
     std::cout << "\nResult: " << static_cast<int64_t>(*this->registers.rax) << std::endl
               << std::bitset<sizeof(register_64bit) * CHAR_BIT>(*this->registers.rax) << std::endl;
 }
+
+//only for 32-bit floating point numbers
+void processor::mul_fp(register_32bit *multiplicand)
+{
+    assert(this->registers.mmx1 != multiplicand);
+    std::cout << "\n\t\tFLOATING POINT MUL " << std::endl
+              << *reinterpret_cast<float*>(this->registers.mmx1) << "\t  "  
+              << std::bitset<sizeof(register_32bit) * CHAR_BIT>(*this->registers.mmx1) << std::endl
+              << *reinterpret_cast<float*>(multiplicand) << "\t  "
+              << std::bitset<sizeof(register_32bit) * CHAR_BIT>(*multiplicand) << std::endl;
+
+    if(*this->registers.mmx1 == 0 || *multiplicand == 0)
+    {
+        *this->registers.mmx1 = 0;
+        return;
+    }
+
+	register_32bit multiplier_mantissa = *this->registers.mmx1 & 0x007FFFFF + 0x800000;
+	register_32bit multiplicand_mantissa = *multiplicand & 0x007FFFFF + 0x800000;
+
+    register_32bit sign = (*this->registers.mmx1 >> 31) & 0b01 ^ (*multiplicand  >> 31) & 0b01;
+    register_32bit exp = ((*this->registers.mmx1 >> 23) & 0b011111111) + ((*multiplicand  >> 23) & 0b011111111) - 127;
+
+    multiplier_mantissa = (multiplier_mantissa | 0x00800000) << 7;
+	multiplicand_mantissa = (multiplicand_mantissa | 0x00800000) << 8;
+
+	register_64bit mantissa = (register_64bit)multiplier_mantissa * (register_64bit)multiplicand_mantissa;
+    
+    //shift most significatn bit to right 
+	for(size_t i = 22; (mantissa & ((uint64_t)1 << 63)) / ((uint64_t)1 << 63) == 0 && (i != 0); --i)
+    {
+        mantissa <<= 1;
+    }
+    mantissa <<= 1;
+	mantissa >>= 41;
+
+    std::cout << "Sing: " << sign << std::endl
+              << "Exp: "  << exp << std::endl
+              << "Mantissa: " << std::bitset<64>(mantissa) << std::endl;
+
+    *this->registers.mmx1 |= sign << 31;
+    *this->registers.mmx1 |= exp << 23;
+    *this->registers.mmx1 |= mantissa;
+
+    std::cout << "Result: " << std::fixed << *reinterpret_cast<float*>(this->registers.mmx1) << "\t" 
+              << std::bitset<sizeof(register_32bit) * CHAR_BIT>(*this->registers.mmx1) << std::endl;
+}
