@@ -5,7 +5,7 @@
 _start:    
     movq (%rsp), %rax       /* argc to RAX                                  */
     cmp $2, %eax            /* subrt 1 and check if zero                    */
-    jne argument_error      /* call number of open() in RAX                 */    
+    jne exit                /* call number of open() in RAX                 */    
                             /* --- call open() ---                          */
     movq 16(%rsp), %rdi     /* 1 - in RDI - pointer to char*                */
     syscall
@@ -38,11 +38,8 @@ _start:
     mov %rdx, %rsi          /* 2 - len                                      */
     syscall                 /* ignoring returned value to sipmlify          */    
     
+exit:
     mov $60, %eax
     xor %edi, %edi          /* 1 - exit code                                */
     syscall
 
-argument_error:
-    mov $60, %eax
-    mov $1, %edi
-    syscall
